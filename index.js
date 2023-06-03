@@ -2,6 +2,9 @@
 const {browser: {createBrowser}} = require('mega-scraper')
 const args = require('yargs').argv
 
+const encodeMap = new Map();
+const decodeMap = new Map();
+
 function encodeSpecialParameters(input) {
     const specialParams = input.match(/&[a-zA-Z0-9#]+;/g);
     if(specialParams) {
