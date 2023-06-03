@@ -17,3 +17,4 @@ async function translate ({ text, from = 'auto', to = 'en', browser, page } = {}
 
   return translation
 }
+module.exports = translate
