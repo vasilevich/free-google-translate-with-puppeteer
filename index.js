@@ -2,18 +2,23 @@
 const {browser: {createBrowser}} = require('mega-scraper')
 const args = require('yargs').argv
 
-const encodeMap = new Map();
-const decodeMap = new Map();
+const placeholderMap = new Map();
 
+function generateUniqueToken() {
+    return Math.random().toString(10).substr(2, 10);
+}
+
+// Function to encode special parameters
 function encodeSpecialParameters(input) {
     const specialParams = input.match(/&[a-zA-Z0-9#]+;/g);
     if(specialParams) {
         for(const param of specialParams) {
-            const encoded = Buffer.from(param).toString('base64');
-            const wrappedEncoded = `&nbsp;${encoded}&nbsp;`;
-            input = input.replace(new RegExp(param, 'g'), wrappedEncoded);
-            encodeMap.set(param, wrappedEncoded);
-            decodeMap.set(wrappedEncoded, param);
+            let token = placeholderMap.get(param);
+            if(!token) {
+                token = generateUniqueToken();
+                placeholderMap.set(token, param);
+            }
+            input = input.replace(new RegExp(param, 'g'), token);
         }
     }
     return input;
@@ -21,15 +26,9 @@ function encodeSpecialParameters(input) {
 
 // Function to decode special parameters
 function decodeSpecialParameters(input) {
-    const specialParams = input.match(/&nbsp;[a-zA-Z0-9+/=]+&nbsp;/g);
-    if(specialParams) {
-        for(const param of specialParams) {
-            const original = decodeMap.get(param);
-            if(original) {
-                input = input.replace(new RegExp(param, 'g'), original);
-            }
-        }
-    }
+    placeholderMap.forEach((value, key) => {
+        input = input.replace(new RegExp(key, 'g'), value);
+    });
     return input;
 }
 
