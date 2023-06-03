@@ -5,7 +5,7 @@
   "main": "index.js",
   "bin": "index.js",
   "dependencies": {
-    "mega-scraper": "15.6.1",
+    "mega-scraper": "14.5.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
