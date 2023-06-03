@@ -9,9 +9,9 @@ async function translate ({ text, from = 'auto', to = 'en', browser, page } = {}
 
   page = page || await browser.newPage()
   await page.goto(`https://translate.google.com/#view=home&op=translate&sl=${from}&tl=${to}&text=${encodeURIComponent(text)}`)
-  await page.waitForSelector('.tlid-translation', { timeout: 10000 })
+  await page.waitForSelector('[jsaction="copy:zVnXqd,r8sht;"] > div > div span > div > div > div > div > span', { timeout: 10000 })
 
-  const translation = await page.evaluate(() => document.querySelector('.tlid-translation').textContent)
+  const translation = await page.evaluate(() => document.querySelector('[jsaction="copy:zVnXqd,r8sht;"] > div > div span > div > div > div > div > span').textContent)
   await page.close()
   await browser.instance.close()
 
