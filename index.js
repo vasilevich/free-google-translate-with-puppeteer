@@ -36,7 +36,7 @@ async function translate({text, from = 'auto', to = 'en', browser, page} = {}) {
     if (!text) throw new Error('missing text')
     if (!from) throw new Error('missing from')
     if (!to) throw new Error('missing to')
-    if (!browser) browser = await createBrowser({headless: true, screenshot: true})
+    if (!browser) browser = await createBrowser({headless: true, screenshot: false})
 
     page = page || await browser.newPage()
     await page.goto(`https://translate.google.com/?op=translate&sl=${from}&tl=${to}&text=${encodeURIComponent(encodeSpecialParameters(text))}`)
