@@ -11,10 +11,10 @@ function generateUniqueToken() {
 // Function to encode special parameters
 function encodeSpecialParameters(input) {
     const specialParams = input.match(/&[a-zA-Z0-9#]+;/g);
-    if(specialParams) {
-        for(const param of specialParams) {
+    if (specialParams) {
+        for (const param of specialParams) {
             let token = placeholderMap.get(param);
-            if(!token) {
+            if (!token) {
                 token = generateUniqueToken();
                 placeholderMap.set(token, param);
             }
@@ -49,4 +49,17 @@ async function translate({text, from = 'auto', to = 'en', browser, page} = {}) {
     return decodeSpecialParameters(translation)
 }
 
-module.exports = translate
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+async function translateAutoRetry({text, from = 'auto', to = 'en', browser, page} = {}) {
+    try {
+        return await translate({text, from, to, browser, page})
+    } catch (e) {
+        console.error(e)
+        console.log('retrying...')
+        await wait(3000)
+        return await translate({text, from, to, browser, page})
+    }
+}
+
+module.exports = translateAutoRetry
